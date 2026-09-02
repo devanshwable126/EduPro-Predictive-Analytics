@@ -1111,31 +1111,34 @@ if page == "Predictive Analytics":
     # FORECAST FILE CHECK
     # -------------------------------------------------
 
-    if not forecast_file_exists:
+from pathlib import Path
+import pandas as pd
+import streamlit as st
 
-        st.error(
-            "Forecast file not found."
-        )
 
-        st.write(
-            "Please make sure the file is located at:"
-        )
+@st.cache_data
+def load_forecast_data():
 
-        st.code(
-            "data/EduPro_Forecast.xlsx"
-        )
+    BASE_DIR = Path(__file__).resolve().parent
+    file_path = BASE_DIR / "data" / "EduPro_Forecast.xlsx"
 
-    else:
+    if not file_path.exists():
+        return None
 
-        st.success(
-            "Predictive forecast dataset loaded successfully!"
-        )
+    return pd.read_excel(file_path)
+
+
+# Load forecast data
+forecast_df = load_forecast_data()
+
+forecast_file_exists = forecast_df is not None
+
 
         # -------------------------------------------------
         # CHECK REQUIRED COLUMNS
         # -------------------------------------------------
 
-        required_columns = [
+required_columns = [
             "CourseID",
             "CourseName",
             "CourseCategory",
@@ -1146,13 +1149,13 @@ if page == "Predictive Analytics":
             "PredictedRevenue"
         ]
 
-        missing_columns = [
+missing_columns = [
             column
             for column in required_columns
             if column not in forecast_data.columns
         ]
 
-        if len(missing_columns) > 0:
+if len(missing_columns) > 0:
 
             st.error(
                 "Some required forecast columns are missing."
@@ -1174,7 +1177,7 @@ if page == "Predictive Analytics":
                 forecast_data.columns.tolist()
             )
 
-        else:
+else:
 
             # -------------------------------------------------
             # FORECAST KPI OVERVIEW

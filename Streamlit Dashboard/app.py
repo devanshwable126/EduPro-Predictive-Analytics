@@ -23,7 +23,11 @@ st.set_page_config(
 @st.cache_data
 def load_data():
 
-    file_path = "data/EduPro Online Platform.xlsx"
+    from pathlib import Path
+
+    BASE_DIR = Path(__file__).resolve().parent
+    file_path = BASE_DIR / "data" / "EduPro Online Platform.xlsx"
+
 
     users = pd.read_excel(
         file_path,

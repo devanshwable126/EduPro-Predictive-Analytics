@@ -62,11 +62,21 @@ users, teachers, courses, transactions = load_data()
 @st.cache_data
 def load_forecast_data():
 
-    forecast_path = "data/EduPro_Forecast.xlsx"
+    from pathlib import Path
 
-    if os.path.exists(forecast_path):
+    BASE_DIR = Path(__file__).resolve().parent
 
-        excel_file = pd.ExcelFile(forecast_path)
+    forecast_path = (
+        BASE_DIR
+        / "data"
+        / "EduPro_Forecast.xlsx"
+    )
+
+    if forecast_path.exists():
+
+        excel_file = pd.ExcelFile(
+            forecast_path
+        )
 
         forecast_data = pd.read_excel(
             forecast_path,
@@ -79,7 +89,6 @@ def load_forecast_data():
 
 
 forecast_data, forecast_file_exists = load_forecast_data()
-
 
 # =================================================
 # SIDEBAR NAVIGATION
